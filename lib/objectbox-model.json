@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:932252667448243648",
-      "lastPropertyId": "13:5123493633096040445",
+      "lastPropertyId": "15:1141714858081283022",
       "name": "OutboxItem",
       "properties": [
         {
@@ -68,6 +68,16 @@
           "id": "13:5123493633096040445",
           "name": "priority",
           "type": 6
+        },
+        {
+          "id": "14:5278902306689973436",
+          "name": "filePathsJson",
+          "type": 9
+        },
+        {
+          "id": "15:1141714858081283022",
+          "name": "fileFieldsJson",
+          "type": 9
         }
       ],
       "relations": []

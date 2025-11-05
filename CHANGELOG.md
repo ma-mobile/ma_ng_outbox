@@ -1,3 +1,8 @@
+## 0.0.5
+
+* Multipart support added
+
+
 ## 0.0.4
 
 * Priority type issue fixed

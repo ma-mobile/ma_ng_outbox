@@ -14,9 +14,6 @@ class ObjectBoxHelper {
 
   static Future<ObjectBoxHelper> create() async {
     if (_instance != null) return _instance!;
-
-    // final dir = await getApplicationDocumentsDirectory();
-    // final store = await openStore(directory: '${dir.path}/objectBox');
     final store = await openStore();
     _instance = ObjectBoxHelper._create(store);
 
@@ -30,6 +27,8 @@ class ObjectBoxHelper {
     Priority priority = Priority.medium,
     String? endPoint,
     String? primaryKey,
+    List<String>? filePaths,
+    List<String>? fileFields,
   }) async {
     String? jsonString;
     if (payload != null) jsonString = jsonEncode(payload);
@@ -43,6 +42,8 @@ class ObjectBoxHelper {
       payload: jsonString,
       response: null,
       isSynced: 0,
+      filePathsJson: jsonEncode(filePaths),
+      fileFieldsJson: jsonEncode(fileFields),
       createdAt: DateTime.now().millisecondsSinceEpoch,
     );
 

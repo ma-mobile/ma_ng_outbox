@@ -16,6 +16,8 @@ class OutboxItem {
   int lastTried;
   int isSynced;
   int createdAt;
+  String? filePathsJson;
+  String? fileFieldsJson;
 
   /// Priority 1 is lowest
   /// Priority 2 is medium
@@ -34,6 +36,8 @@ class OutboxItem {
     this.priority = 2,
     this.lastTried = 0,
     this.isSynced = 0,
+    this.fileFieldsJson,
+    this.filePathsJson,
     required this.createdAt,
   });
 }
