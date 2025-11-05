@@ -22,7 +22,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(1, 932252667448243648),
     name: 'OutboxItem',
-    lastPropertyId: const obx_int.IdUid(11, 1488771190633232870),
+    lastPropertyId: const obx_int.IdUid(13, 5123493633096040445),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -34,12 +34,6 @@ final _entities = <obx_int.ModelEntity>[
       obx_int.ModelProperty(
         id: const obx_int.IdUid(2, 9083666087851580194),
         name: 'operation',
-        type: 9,
-        flags: 0,
-      ),
-      obx_int.ModelProperty(
-        id: const obx_int.IdUid(3, 214461829746510662),
-        name: 'tableName',
         type: 9,
         flags: 0,
       ),
@@ -88,6 +82,18 @@ final _entities = <obx_int.ModelEntity>[
       obx_int.ModelProperty(
         id: const obx_int.IdUid(11, 1488771190633232870),
         name: 'createdAt',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(12, 2303132774420079456),
+        name: 'endPoint',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(13, 5123493633096040445),
+        name: 'priority',
         type: 6,
         flags: 0,
       ),
@@ -141,7 +147,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [],
     retiredIndexUids: const [],
-    retiredPropertyUids: const [],
+    retiredPropertyUids: const [214461829746510662],
     retiredRelationUids: const [],
     modelVersion: 5,
     modelVersionParserMinimum: 5,
@@ -159,9 +165,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
       },
       objectToFB: (OutboxItem object, fb.Builder fbb) {
         final operationOffset = fbb.writeString(object.operation);
-        final tableNameOffset = object.tableName == null
-            ? null
-            : fbb.writeString(object.tableName!);
         final primaryKeyOffset = object.primaryKey == null
             ? null
             : fbb.writeString(object.primaryKey!);
@@ -172,10 +175,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final responseOffset = object.response == null
             ? null
             : fbb.writeString(object.response!);
-        fbb.startTable(12);
+        final endPointOffset = object.endPoint == null
+            ? null
+            : fbb.writeString(object.endPoint!);
+        fbb.startTable(14);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, operationOffset);
-        fbb.addOffset(2, tableNameOffset);
         fbb.addOffset(3, primaryKeyOffset);
         fbb.addOffset(4, urlOffset);
         fbb.addOffset(5, payloadOffset);
@@ -184,6 +189,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addInt64(8, object.lastTried);
         fbb.addInt64(9, object.isSynced);
         fbb.addInt64(10, object.createdAt);
+        fbb.addOffset(11, endPointOffset);
+        fbb.addInt64(12, object.priority);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -199,9 +206,9 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final operationParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGet(buffer, rootOffset, 6, '');
-        final tableNameParam = const fb.StringReader(
+        final endPointParam = const fb.StringReader(
           asciiOptimization: true,
-        ).vTableGetNullable(buffer, rootOffset, 8);
+        ).vTableGetNullable(buffer, rootOffset, 26);
         final primaryKeyParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGetNullable(buffer, rootOffset, 10);
@@ -218,6 +225,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
           buffer,
           rootOffset,
           18,
+          0,
+        );
+        final priorityParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          28,
           0,
         );
         final lastTriedParam = const fb.Int64Reader().vTableGet(
@@ -241,12 +254,13 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final object = OutboxItem(
           id: idParam,
           operation: operationParam,
-          tableName: tableNameParam,
+          endPoint: endPointParam,
           primaryKey: primaryKeyParam,
           url: urlParam,
           payload: payloadParam,
           response: responseParam,
           retryCount: retryCountParam,
+          priority: priorityParam,
           lastTried: lastTriedParam,
           isSynced: isSyncedParam,
           createdAt: createdAtParam,
@@ -272,48 +286,53 @@ class OutboxItem_ {
     _entities[0].properties[1],
   );
 
-  /// See [OutboxItem.tableName].
-  static final tableName = obx.QueryStringProperty<OutboxItem>(
-    _entities[0].properties[2],
-  );
-
   /// See [OutboxItem.primaryKey].
   static final primaryKey = obx.QueryStringProperty<OutboxItem>(
-    _entities[0].properties[3],
+    _entities[0].properties[2],
   );
 
   /// See [OutboxItem.url].
   static final url = obx.QueryStringProperty<OutboxItem>(
-    _entities[0].properties[4],
+    _entities[0].properties[3],
   );
 
   /// See [OutboxItem.payload].
   static final payload = obx.QueryStringProperty<OutboxItem>(
-    _entities[0].properties[5],
+    _entities[0].properties[4],
   );
 
   /// See [OutboxItem.response].
   static final response = obx.QueryStringProperty<OutboxItem>(
-    _entities[0].properties[6],
+    _entities[0].properties[5],
   );
 
   /// See [OutboxItem.retryCount].
   static final retryCount = obx.QueryIntegerProperty<OutboxItem>(
-    _entities[0].properties[7],
+    _entities[0].properties[6],
   );
 
   /// See [OutboxItem.lastTried].
   static final lastTried = obx.QueryIntegerProperty<OutboxItem>(
-    _entities[0].properties[8],
+    _entities[0].properties[7],
   );
 
   /// See [OutboxItem.isSynced].
   static final isSynced = obx.QueryIntegerProperty<OutboxItem>(
-    _entities[0].properties[9],
+    _entities[0].properties[8],
   );
 
   /// See [OutboxItem.createdAt].
   static final createdAt = obx.QueryIntegerProperty<OutboxItem>(
+    _entities[0].properties[9],
+  );
+
+  /// See [OutboxItem.endPoint].
+  static final endPoint = obx.QueryStringProperty<OutboxItem>(
     _entities[0].properties[10],
+  );
+
+  /// See [OutboxItem.priority].
+  static final priority = obx.QueryIntegerProperty<OutboxItem>(
+    _entities[0].properties[11],
   );
 }

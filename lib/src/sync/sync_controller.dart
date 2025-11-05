@@ -14,6 +14,7 @@ class SyncController {
     final box = objectBox.outboxBox;
 
     final items = box.query(OutboxItem_.isSynced.equals(0))
+        .order(OutboxItem_.priority , flags: Order.descending)
         .order(OutboxItem_.createdAt)
         .build()
         .find();

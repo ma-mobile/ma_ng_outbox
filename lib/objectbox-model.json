@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:932252667448243648",
-      "lastPropertyId": "11:1488771190633232870",
+      "lastPropertyId": "13:5123493633096040445",
       "name": "OutboxItem",
       "properties": [
         {
@@ -17,11 +17,6 @@
         {
           "id": "2:9083666087851580194",
           "name": "operation",
-          "type": 9
-        },
-        {
-          "id": "3:214461829746510662",
-          "name": "tableName",
           "type": 9
         },
         {
@@ -63,6 +58,16 @@
           "id": "11:1488771190633232870",
           "name": "createdAt",
           "type": 6
+        },
+        {
+          "id": "12:2303132774420079456",
+          "name": "endPoint",
+          "type": 9
+        },
+        {
+          "id": "13:5123493633096040445",
+          "name": "priority",
+          "type": 6
         }
       ],
       "relations": []
@@ -76,7 +81,9 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    214461829746510662
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

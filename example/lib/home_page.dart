@@ -61,7 +61,8 @@ class _HomePageState extends State<HomePage> {
       //   "body": "Testing offline sync",
       //   "userId": DateTime.now().millisecondsSinceEpoch,
       // },
-      tableName: "posts",
+      endPoint: "posts",
+      priority: Priority.medium,
       primaryKey: "local-${DateTime.now().millisecondsSinceEpoch}",
     );
 

@@ -27,7 +27,8 @@ class ObjectBoxHelper {
     required String operation,
     required String url,
     dynamic payload,
-    String? tableName,
+    Priority priority = Priority.medium,
+    String? endPoint,
     String? primaryKey,
   }) async {
     String? jsonString;
@@ -35,8 +36,9 @@ class ObjectBoxHelper {
 
     final item = OutboxItem(
       operation: operation,
-      tableName: tableName,
+      endPoint: endPoint,
       primaryKey: primaryKey,
+      priority: priority.priority,
       url: url,
       payload: jsonString,
       response: null,
