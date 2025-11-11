@@ -1,3 +1,8 @@
+## 0.0.6
+
+* FilePath null issue fixed and separate api methods based on operation type
+
+
 ## 0.0.5
 
 * Multipart support added

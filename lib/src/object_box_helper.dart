@@ -42,8 +42,8 @@ class ObjectBoxHelper {
       payload: jsonString,
       response: null,
       isSynced: 0,
-      filePathsJson: jsonEncode(filePaths),
-      fileFieldsJson: jsonEncode(fileFields),
+      filePathsJson: filePaths==null ? null : jsonEncode(filePaths),
+      fileFieldsJson: fileFields==null ? null : jsonEncode(fileFields),
       createdAt: DateTime.now().millisecondsSinceEpoch,
     );
 
