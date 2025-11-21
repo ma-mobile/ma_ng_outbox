@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:932252667448243648",
-      "lastPropertyId": "15:1141714858081283022",
+      "lastPropertyId": "19:7157930074972655508",
       "name": "OutboxItem",
       "properties": [
         {
@@ -77,6 +77,26 @@
         {
           "id": "15:1141714858081283022",
           "name": "fileFieldsJson",
+          "type": 9
+        },
+        {
+          "id": "16:4818740414640665605",
+          "name": "statusCode",
+          "type": 6
+        },
+        {
+          "id": "17:4826831951536244690",
+          "name": "tableId",
+          "type": 9
+        },
+        {
+          "id": "18:2400554164403316577",
+          "name": "newAccessToken",
+          "type": 9
+        },
+        {
+          "id": "19:7157930074972655508",
+          "name": "fieldsJson",
           "type": 9
         }
       ],

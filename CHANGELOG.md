@@ -1,3 +1,20 @@
+## 1.0.3 
+
+* fieldsJson added
+
+## 1.0.2
+
+* tableId added.
+
+## 1.0.1
+
+* Update Existing data if it has same primary key and same endpoint with isSynced = false.
+
+## 1.0.0 
+
+* Isolate response issue fixed.
+* Non-mandatory fields added in sync function. 
+
 ## 0.0.6
 
 * FilePath null issue fixed and separate api methods based on operation type

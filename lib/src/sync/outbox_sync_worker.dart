@@ -68,20 +68,17 @@ String normalizeResponse(dynamic data) {
   if (data is String) {
     final s = data.trim();
 
-    // ✅ Check JSON object/array
-    if ((s.startsWith('{') && s.endsWith('}')) ||
-        (s.startsWith('[') && s.endsWith(']'))) {
-      return s; // valid JSON string
-    }
+    // Try parsing. If parse succeeds → JSON
+    try {
+      final decoded = jsonDecode(s);
+      return jsonEncode(decoded);   // always proper JSON string
+    } catch (_) {
+      // Not JSON → might be Base64 or text
+      final base64Regex = RegExp(r'^[A-Za-z0-9+/=]+$');
+      if (base64Regex.hasMatch(s)) return s;
 
-    // ✅ Check Base64
-    final base64Regex = RegExp(r'^[A-Za-z0-9+/=]+$');
-    if (base64Regex.hasMatch(s)) {
-      return s; // assume Base64
+      return s; // plain text
     }
-
-    // ✅ Otherwise plain text
-    return s;
   }
 
   // ✅ Case 3: If JSON object (Map or List)

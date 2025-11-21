@@ -16,8 +16,12 @@ class OutboxItem {
   int lastTried;
   int isSynced;
   int createdAt;
+  int? statusCode;
   String? filePathsJson;
+  String? tableId;
+  String? fieldsJson;
   String? fileFieldsJson;
+  String? newAccessToken;
 
   /// Priority 1 is lowest
   /// Priority 2 is medium
@@ -37,7 +41,11 @@ class OutboxItem {
     this.lastTried = 0,
     this.isSynced = 0,
     this.fileFieldsJson,
+    this.statusCode,
     this.filePathsJson,
+    this.fieldsJson,
+    this.tableId,
+    this.newAccessToken,
     required this.createdAt,
   });
 }

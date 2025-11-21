@@ -22,7 +22,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(1, 932252667448243648),
     name: 'OutboxItem',
-    lastPropertyId: const obx_int.IdUid(15, 1141714858081283022),
+    lastPropertyId: const obx_int.IdUid(19, 7157930074972655508),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -106,6 +106,30 @@ final _entities = <obx_int.ModelEntity>[
       obx_int.ModelProperty(
         id: const obx_int.IdUid(15, 1141714858081283022),
         name: 'fileFieldsJson',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(16, 4818740414640665605),
+        name: 'statusCode',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(17, 4826831951536244690),
+        name: 'tableId',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(18, 2400554164403316577),
+        name: 'newAccessToken',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(19, 7157930074972655508),
+        name: 'fieldsJson',
         type: 9,
         flags: 0,
       ),
@@ -196,7 +220,16 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final fileFieldsJsonOffset = object.fileFieldsJson == null
             ? null
             : fbb.writeString(object.fileFieldsJson!);
-        fbb.startTable(16);
+        final tableIdOffset = object.tableId == null
+            ? null
+            : fbb.writeString(object.tableId!);
+        final newAccessTokenOffset = object.newAccessToken == null
+            ? null
+            : fbb.writeString(object.newAccessToken!);
+        final fieldsJsonOffset = object.fieldsJson == null
+            ? null
+            : fbb.writeString(object.fieldsJson!);
+        fbb.startTable(20);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, operationOffset);
         fbb.addOffset(3, primaryKeyOffset);
@@ -211,6 +244,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addInt64(12, object.priority);
         fbb.addOffset(13, filePathsJsonOffset);
         fbb.addOffset(14, fileFieldsJsonOffset);
+        fbb.addInt64(15, object.statusCode);
+        fbb.addOffset(16, tableIdOffset);
+        fbb.addOffset(17, newAccessTokenOffset);
+        fbb.addOffset(18, fieldsJsonOffset);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -268,9 +305,23 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final fileFieldsJsonParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGetNullable(buffer, rootOffset, 32);
+        final statusCodeParam = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          34,
+        );
         final filePathsJsonParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGetNullable(buffer, rootOffset, 30);
+        final fieldsJsonParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 40);
+        final tableIdParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 36);
+        final newAccessTokenParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 38);
         final createdAtParam = const fb.Int64Reader().vTableGet(
           buffer,
           rootOffset,
@@ -290,7 +341,11 @@ obx_int.ModelDefinition getObjectBoxModel() {
           lastTried: lastTriedParam,
           isSynced: isSyncedParam,
           fileFieldsJson: fileFieldsJsonParam,
+          statusCode: statusCodeParam,
           filePathsJson: filePathsJsonParam,
+          fieldsJson: fieldsJsonParam,
+          tableId: tableIdParam,
+          newAccessToken: newAccessTokenParam,
           createdAt: createdAtParam,
         );
 
@@ -372,5 +427,25 @@ class OutboxItem_ {
   /// See [OutboxItem.fileFieldsJson].
   static final fileFieldsJson = obx.QueryStringProperty<OutboxItem>(
     _entities[0].properties[13],
+  );
+
+  /// See [OutboxItem.statusCode].
+  static final statusCode = obx.QueryIntegerProperty<OutboxItem>(
+    _entities[0].properties[14],
+  );
+
+  /// See [OutboxItem.tableId].
+  static final tableId = obx.QueryStringProperty<OutboxItem>(
+    _entities[0].properties[15],
+  );
+
+  /// See [OutboxItem.newAccessToken].
+  static final newAccessToken = obx.QueryStringProperty<OutboxItem>(
+    _entities[0].properties[16],
+  );
+
+  /// See [OutboxItem.fieldsJson].
+  static final fieldsJson = obx.QueryStringProperty<OutboxItem>(
+    _entities[0].properties[17],
   );
 }
