@@ -1,7 +1,6 @@
 name: ma_ng_outbox
 description: "Mariapps Internal Package to build Flutter apps faster"
-version: 1.0.5
-repository: https://github.com/ma-mobile/ma_ng_outbox.git
+version: 1.0.10
 
 environment:
   sdk: ^3.9.2
@@ -17,6 +16,7 @@ dependencies:
   connectivity_plus: ^6.1.3
   flat_buffers: ^23.5.26
   path_provider: ^2.1.5
+  http: ^1.6.0
 
 dev_dependencies:
   flutter_test:

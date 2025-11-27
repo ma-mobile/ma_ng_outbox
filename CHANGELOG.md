@@ -1,3 +1,8 @@
+## 1.0.6
+
+* Network monitor added
+
+
 ## 1.0.3 
 
 * fieldsJson added

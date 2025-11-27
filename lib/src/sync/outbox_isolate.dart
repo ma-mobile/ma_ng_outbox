@@ -147,6 +147,8 @@ void outboxIsolateEntry(OutboxIsolatePayload payload) async {
       );
     }
   }
+
+  payload.sendPort.send("__CLOSE__");
 }
 
 
