@@ -100,12 +100,19 @@ void outboxIsolateEntry(OutboxIsolatePayload payload) async {
         }
 
         // ADD FILES
+        print('=== FILES ===');
+        print('${filePaths.toString()}');
+        print('=== FILES ===');
+        print('=== FILE FIELDS ===');
+        print('${fileFields.toString()}');
+        print('=== FILE FIELDS ===');
         for (int i = 0; i < filePaths.length; i++) {
           final path = filePaths[i];
           final fieldName = (i < fileFields.length && fileFields[i].isNotEmpty)
               ? fileFields[i]
               : "file";
-
+          final fileExist = await File(path).exists();
+          print('=== FILE EXIST $fileExist ===');
           if (File(path).existsSync()) {
             formData.files.add(
               MapEntry(fieldName, await MultipartFile.fromFile(path)),
