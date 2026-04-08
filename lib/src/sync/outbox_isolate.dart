@@ -117,6 +117,19 @@ void outboxIsolateEntry(OutboxIsolatePayload payload) async {
         requestOptions = Options(
           contentType: Headers.multipartFormDataContentType,
         );
+        print('=== FORMDATA FIELDS ===');
+        for (var field in formData.fields) {
+          print('Key: ${field.key} | Value: ${field.value}');
+        }
+
+        print('=== FORMDATA FILES ===');
+        for (var file in formData.files) {
+          print('Field Name: ${file.key}');
+          print('File Name: ${file.value.filename}');
+          print('Content Type: ${file.value.contentType}');
+          print('Length: ${file.value.length} bytes');
+        }
+        print('=========================');
       }
       // ---------- RAW JSON REQUEST ----------
       else {
@@ -171,9 +184,14 @@ void outboxIsolateEntry(OutboxIsolatePayload payload) async {
     }
     // ---------- ERROR HANDLING ----------
     catch (e) {
-      print('out box API call error ******************');
-      print('$e');
-      print('out box API call error ******************');
+      if (e is DioException) {
+        print('🚨 DIO ERROR STATUS: ${e.response?.statusCode}');
+        print(
+          '🚨 DIO ERROR DATA: ${e.response?.data}',
+        ); // <-- This will tell you the exact problem!
+      } else {
+        print('🚨 UNKNOWN ERROR: $e');
+      }
       payload.sendPort.send(OutboxIsolateResult(item.id, null, 0, null));
     }
   }
