@@ -46,7 +46,7 @@ class OutboxIsolateResult {
 void outboxIsolateEntry(OutboxIsolatePayload payload) async {
   BackgroundIsolateBinaryMessenger.ensureInitialized(payload.rootToken);
 
-  print("✅ Outbox Isolate Entry");
+  print("✅ Outbox Isolate Entry v1.0");
 
   final dio = Dio()
     ..options.headers = {'Authorization': 'Bearer ${payload.accessToken}'};
