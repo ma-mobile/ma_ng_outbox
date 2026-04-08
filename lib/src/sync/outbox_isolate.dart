@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
 
@@ -46,7 +47,7 @@ class OutboxIsolateResult {
 void outboxIsolateEntry(OutboxIsolatePayload payload) async {
   BackgroundIsolateBinaryMessenger.ensureInitialized(payload.rootToken);
 
-  print("✅ Outbox Isolate Entry v1.0");
+  print("✅ Outbox Isolate Entry v2.0");
 
   final dio = Dio()
     ..options.headers = {'Authorization': 'Bearer ${payload.accessToken}'};
@@ -168,6 +169,9 @@ void outboxIsolateEntry(OutboxIsolatePayload payload) async {
     }
     // ---------- ERROR HANDLING ----------
     catch (e) {
+      print('out box API call error ******************');
+      log('$e');
+      print('out box API call error ******************');
       payload.sendPort.send(OutboxIsolateResult(item.id, null, 0, null));
     }
   }
