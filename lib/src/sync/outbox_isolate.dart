@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
+
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart'; // ✅ Required!
+
 import '../../ma_ng_outbox.dart';
 
 class OutboxIsolatePayload {
@@ -16,7 +17,16 @@ class OutboxIsolatePayload {
   final String clientId;
   final String clientSecret;
 
-  OutboxIsolatePayload(this.items, this.accessToken, this.rootToken, this.sendPort,this.refreshToken,this.refreshTokenUrl,this.clientId,this.clientSecret);
+  OutboxIsolatePayload(
+    this.items,
+    this.accessToken,
+    this.rootToken,
+    this.sendPort,
+    this.refreshToken,
+    this.refreshTokenUrl,
+    this.clientId,
+    this.clientSecret,
+  );
 }
 
 class OutboxIsolateResult {
@@ -25,9 +35,13 @@ class OutboxIsolateResult {
   final int statusCode;
   final String? newAccessToken;
 
-  OutboxIsolateResult(this.id, this.response,this.statusCode,this.newAccessToken);
+  OutboxIsolateResult(
+    this.id,
+    this.response,
+    this.statusCode,
+    this.newAccessToken,
+  );
 }
-
 
 void outboxIsolateEntry(OutboxIsolatePayload payload) async {
   BackgroundIsolateBinaryMessenger.ensureInitialized(payload.rootToken);
@@ -35,9 +49,7 @@ void outboxIsolateEntry(OutboxIsolatePayload payload) async {
   print("✅ Outbox Isolate Entry");
 
   final dio = Dio()
-    ..options.headers = {
-      'Authorization': 'Bearer ${payload.accessToken}',
-    };
+    ..options.headers = {'Authorization': 'Bearer ${payload.accessToken}'};
 
   for (final item in payload.items) {
     try {
@@ -46,26 +58,29 @@ void outboxIsolateEntry(OutboxIsolatePayload payload) async {
       // ---------- DECODE ARRAYS ----------
       List<String> filePaths = [];
       List<String> fileFields = [];
-      Map<String, dynamic> extraFields = {};   // <-- fieldsJson
+      Map<String, dynamic> extraFields = {}; // <-- fieldsJson
 
       if (item.filePathsJson != null) {
-        try { filePaths = List<String>.from(jsonDecode(item.filePathsJson!)); }
-        catch (_) {}
+        try {
+          filePaths = List<String>.from(jsonDecode(item.filePathsJson!));
+        } catch (_) {}
       }
 
       if (item.fileFieldsJson != null) {
-        try { fileFields = List<String>.from(jsonDecode(item.fileFieldsJson!)); }
-        catch (_) {}
+        try {
+          fileFields = List<String>.from(jsonDecode(item.fileFieldsJson!));
+        } catch (_) {}
       }
 
       if (item.fieldsJson != null) {
-        try { extraFields = Map<String, dynamic>.from(jsonDecode(item.fieldsJson!)); }
-        catch (_) {}
+        try {
+          extraFields = Map<String, dynamic>.from(jsonDecode(item.fieldsJson!));
+        } catch (_) {}
       }
 
-      final bool needMultipart =
-          filePaths.isNotEmpty || extraFields.isNotEmpty;
+      final bool needMultipart = filePaths.isNotEmpty || extraFields.isNotEmpty;
 
+      Options? requestOptions;
       // ---------- MULTIPART REQUEST ----------
       if (needMultipart) {
         print("I am in multipart");
@@ -93,23 +108,19 @@ void outboxIsolateEntry(OutboxIsolatePayload payload) async {
 
           if (File(path).existsSync()) {
             formData.files.add(
-              MapEntry(
-                fieldName,
-                await MultipartFile.fromFile(path),
-              ),
+              MapEntry(fieldName, await MultipartFile.fromFile(path)),
             );
           }
         }
 
         requestData = formData;
       }
-
       // ---------- RAW JSON REQUEST ----------
       else {
-        requestData =
-        (item.payload != null && item.payload!.isNotEmpty)
+        requestData = (item.payload != null && item.payload!.isNotEmpty)
             ? jsonDecode(item.payload!)
             : null;
+        requestOptions = Options(contentType: Headers.jsonContentType);
       }
 
       // ---------- SEND API REQUEST ----------
@@ -117,17 +128,33 @@ void outboxIsolateEntry(OutboxIsolatePayload payload) async {
 
       switch (item.operation.toUpperCase()) {
         case 'POST':
-          res = await dio.post(item.url, data: requestData);
+          res = await dio.post(
+            item.url,
+            data: requestData,
+            options: requestOptions,
+          );
           print("Res = > ${res.data} with ${res.statusCode}");
           break;
         case 'PUT':
-          res = await dio.put(item.url, data: requestData);
+          res = await dio.put(
+            item.url,
+            data: requestData,
+            options: requestOptions,
+          );
           break;
         case 'DELETE':
-          res = await dio.delete(item.url, data: requestData);
+          res = await dio.delete(
+            item.url,
+            data: requestData,
+            options: requestOptions,
+          );
           break;
         default:
-          res = await dio.get(item.url, queryParameters: requestData);
+          res = await dio.get(
+            item.url,
+            queryParameters: requestData,
+            options: requestOptions,
+          );
       }
 
       payload.sendPort.send(
@@ -139,21 +166,21 @@ void outboxIsolateEntry(OutboxIsolatePayload payload) async {
         ),
       );
     }
-
     // ---------- ERROR HANDLING ----------
     catch (e) {
-      payload.sendPort.send(
-        OutboxIsolateResult(item.id, null, 0, null),
-      );
+      payload.sendPort.send(OutboxIsolateResult(item.id, null, 0, null));
     }
   }
 
   payload.sendPort.send("__CLOSE__");
 }
 
-
-
-Future<String?> refreshAccessToken(String refreshTokenUrl, String refreshToken,String clientId,String clientSecret) async {
+Future<String?> refreshAccessToken(
+  String refreshTokenUrl,
+  String refreshToken,
+  String clientId,
+  String clientSecret,
+) async {
   try {
     final url = Uri.parse(refreshTokenUrl);
 
@@ -164,12 +191,10 @@ Future<String?> refreshAccessToken(String refreshTokenUrl, String refreshToken,S
       'client_id': clientId,
       'client_secret': clientSecret,
       'refresh_token': refreshToken,
-      'scope': 'openid profile api1 offline_access'
+      'scope': 'openid profile api1 offline_access',
     };
 
-    final res = await HttpClient()
-        .postUrl(url)
-        .then((req) {
+    final res = await HttpClient().postUrl(url).then((req) {
       req.headers.set("Content-Type", "application/x-www-form-urlencoded");
       req.write(Uri(queryParameters: body).query);
       return req.close();
@@ -188,4 +213,3 @@ Future<String?> refreshAccessToken(String refreshTokenUrl, String refreshToken,S
     return null;
   }
 }
-
