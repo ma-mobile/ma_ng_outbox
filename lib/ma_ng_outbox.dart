@@ -12,6 +12,7 @@ export 'src/sync/outbox_sync_worker.dart';
 export 'src/sync/outbox_isolate.dart';
 export 'src/sync/sync_controller.dart';
 export 'src/network/connectivity_service.dart';
+export 'src/sync/outbox_sync_listener.dart';
 
 
 class MaNgOutbox {
