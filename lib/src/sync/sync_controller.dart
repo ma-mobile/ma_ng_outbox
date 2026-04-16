@@ -1,7 +1,6 @@
 import 'dart:isolate';
 
 import 'package:flutter/services.dart';
-import 'package:ma_ng_outbox/src/sync/outbox_sync_listener.dart';
 
 import '../../ma_ng_outbox.dart';
 import '../../objectbox.g.dart';
@@ -15,6 +14,7 @@ class SyncController {
     required RootIsolateToken rootToken,
     String? primaryKey,
     String? endPoint,
+    List<OutboxItem> Function(List<OutboxItem> pendingItems)? queueInterceptor,
   }) async {
     if (isSyncing) {
       print("⏳ SKIPPED — sync already running");
@@ -28,38 +28,50 @@ class SyncController {
     final refreshTokenUrl = objectBox.refreshTokenUrl;
     final clientId = objectBox.clientId;
     final clientSecret = objectBox.clientSecret;
+    var queryBuilder = box.query(OutboxItem_.isSynced.equals(0));
 
-    List<OutboxItem> items = [];
-    if (primaryKey == null && endPoint == null) {
-      items = box
-          .query(OutboxItem_.isSynced.equals(0))
-          .order(OutboxItem_.priority, flags: Order.descending)
-          .order(OutboxItem_.createdAt)
-          .build()
-          .find();
-    } else if (primaryKey != null && endPoint == null) {
-      items = box
-          .query(
-            OutboxItem_.isSynced
-                .equals(0)
-                .and(OutboxItem_.primaryKey.equals(primaryKey)),
-          )
-          .order(OutboxItem_.priority, flags: Order.descending)
-          .order(OutboxItem_.createdAt)
-          .build()
-          .find();
+    // 2. Dynamically add the Primary Key condition if it exists
+    if (primaryKey != null && endPoint == null) {
+      queryBuilder = box.query(
+        OutboxItem_.isSynced
+            .equals(0)
+            .and(OutboxItem_.primaryKey.equals(primaryKey)),
+      );
+    } else if (primaryKey == null && endPoint != null) {
+      // 🚨 This was your missing scenario!
+      queryBuilder = box.query(
+        OutboxItem_.isSynced
+            .equals(0)
+            .and(OutboxItem_.endPoint.equals(endPoint)),
+      );
     } else if (primaryKey != null && endPoint != null) {
-      items = box
-          .query(
-            OutboxItem_.isSynced
-                .equals(0)
-                .and(OutboxItem_.primaryKey.equals(primaryKey))
-                .and(OutboxItem_.endPoint.equals(endPoint)),
-          )
-          .order(OutboxItem_.priority, flags: Order.descending)
-          .order(OutboxItem_.createdAt)
-          .build()
-          .find();
+      queryBuilder = box.query(
+        OutboxItem_.isSynced
+            .equals(0)
+            .and(OutboxItem_.primaryKey.equals(primaryKey))
+            .and(OutboxItem_.endPoint.equals(endPoint)),
+      );
+    }
+
+    // 3. Apply the sorting and build it once
+    List<OutboxItem> items = queryBuilder
+        .order(OutboxItem_.priority, flags: Order.descending)
+        .order(OutboxItem_.createdAt)
+        .build()
+        .find();
+
+    // 🚨 2. Pass the items to the host app's interceptor (if they provided one)
+    List<OutboxItem> itemsReadyToSend = items;
+
+    if (queueInterceptor != null) {
+      itemsReadyToSend = queueInterceptor(items);
+    }
+
+    // 3. Stop if the host app filtered everything out
+    if (itemsReadyToSend.isEmpty) {
+      print("🏁 No ready items to sync.");
+      isSyncing = false;
+      return;
     }
 
     final receivePort = ReceivePort();
@@ -67,7 +79,7 @@ class SyncController {
     Isolate.spawn(
       outboxIsolateEntry,
       OutboxIsolatePayload(
-        items,
+        itemsReadyToSend,
         token,
         rootToken,
         receivePort.sendPort,
