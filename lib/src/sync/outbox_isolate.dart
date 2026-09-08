@@ -16,6 +16,7 @@ class OutboxIsolatePayload {
   final String refreshTokenUrl;
   final String clientId;
   final String clientSecret;
+  final Dio dio;
 
   OutboxIsolatePayload(
     this.items,
@@ -26,6 +27,7 @@ class OutboxIsolatePayload {
     this.refreshTokenUrl,
     this.clientId,
     this.clientSecret,
+    this.dio,
   );
 }
 
@@ -48,7 +50,7 @@ void outboxIsolateEntry(OutboxIsolatePayload payload) async {
 
   print("✅ Outbox Isolate Entry v3.0");
 
-  final dio = Dio()
+  final dio = payload.dio
     ..options.headers = {'Authorization': 'Bearer ${payload.accessToken}'};
 
   for (final item in payload.items) {

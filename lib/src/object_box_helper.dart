@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
+
 import '../../../objectbox.g.dart';
 import '../ma_ng_outbox.dart';
 
@@ -9,6 +11,7 @@ class ObjectBoxHelper {
   String refreshTokenUrl = '';
   String clientId ='';
   String clientSecret ='';
+  Dio? dio;
 
   static ObjectBoxHelper? _instance;
 

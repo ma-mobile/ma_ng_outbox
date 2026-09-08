@@ -1,5 +1,6 @@
 import 'dart:isolate';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 
 import '../../ma_ng_outbox.dart';
@@ -28,6 +29,7 @@ class SyncController {
     final refreshTokenUrl = objectBox.refreshTokenUrl;
     final clientId = objectBox.clientId;
     final clientSecret = objectBox.clientSecret;
+    final dio = objectBox.dio ?? Dio();
     var queryBuilder = box.query(OutboxItem_.isSynced.equals(0));
 
     // 2. Dynamically add the Primary Key condition if it exists
@@ -87,6 +89,7 @@ class SyncController {
         refreshTokenUrl,
         clientId,
         clientSecret,
+        dio,
       ),
     );
 
