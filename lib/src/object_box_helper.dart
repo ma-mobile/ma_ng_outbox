@@ -9,9 +9,10 @@ class ObjectBoxHelper {
   late final Box<OutboxItem> outboxBox;
   String refreshToken = '';
   String refreshTokenUrl = '';
-  String clientId ='';
-  String clientSecret ='';
-  Dio? dio;
+  String clientId = '';
+  String clientSecret = '';
+  String certificatesDirectory = '';
+  String pfxPassword = '';
 
   static ObjectBoxHelper? _instance;
 
@@ -47,26 +48,33 @@ class ObjectBoxHelper {
 
     String? fieldsJsonString;
     if (fieldsJson != null) {
-      fieldsJsonString = jsonEncode(fieldsJson);   // <-- FIXED
+      fieldsJsonString = jsonEncode(fieldsJson); // <-- FIXED
     }
 
     OutboxItem? existing;
 
-    if(tableId==null) {
+    if (tableId == null) {
       // 🔍 Check for an existing unsynced item with same PK + endpoint
-      existing = outboxBox.query(
-          OutboxItem_.isSynced.equals(0)
-              .and(OutboxItem_.primaryKey.equals(pk))
-              .and(OutboxItem_.endPoint.equals(endPoint ?? ""))
-      ).build().findFirst();
-    }
-    else{
-      existing = outboxBox.query(
-          OutboxItem_.isSynced.equals(0)
-              .and(OutboxItem_.primaryKey.equals(pk))
-              .and(OutboxItem_.tableId.equals(tableId))
-              .and(OutboxItem_.endPoint.equals(endPoint ?? ""))
-      ).build().findFirst();
+      existing = outboxBox
+          .query(
+            OutboxItem_.isSynced
+                .equals(0)
+                .and(OutboxItem_.primaryKey.equals(pk))
+                .and(OutboxItem_.endPoint.equals(endPoint ?? "")),
+          )
+          .build()
+          .findFirst();
+    } else {
+      existing = outboxBox
+          .query(
+            OutboxItem_.isSynced
+                .equals(0)
+                .and(OutboxItem_.primaryKey.equals(pk))
+                .and(OutboxItem_.tableId.equals(tableId))
+                .and(OutboxItem_.endPoint.equals(endPoint ?? "")),
+          )
+          .build()
+          .findFirst();
     }
 
     if (existing != null) {
@@ -74,10 +82,14 @@ class ObjectBoxHelper {
       existing.fieldsJson = fieldsJsonString;
       existing.payload = jsonString;
       existing.filePathsJson = filePaths == null ? null : jsonEncode(filePaths);
-      existing.fileFieldsJson = fileFields == null ? null : jsonEncode(fileFields);
+      existing.fileFieldsJson = fileFields == null
+          ? null
+          : jsonEncode(fileFields);
       existing.createdAt = DateTime.now().millisecondsSinceEpoch;
       outboxBox.put(existing);
-      print("🔁 Updated existing outbox item for primaryKey=$pk endPoint=$endPoint");
+      print(
+        "🔁 Updated existing outbox item for primaryKey=$pk endPoint=$endPoint",
+      );
       return;
     }
 
@@ -101,5 +113,4 @@ class ObjectBoxHelper {
     outboxBox.put(item);
     print("🆕 Added new outbox item for primaryKey=$pk endPoint=$endPoint");
   }
-
 }

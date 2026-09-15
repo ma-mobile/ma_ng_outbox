@@ -29,7 +29,8 @@ class SyncController {
     final refreshTokenUrl = objectBox.refreshTokenUrl;
     final clientId = objectBox.clientId;
     final clientSecret = objectBox.clientSecret;
-    final dio = objectBox.dio ?? Dio();
+    final certificatesDirectory = objectBox.certificatesDirectory;
+    final pfxPassword = objectBox.pfxPassword;
     var queryBuilder = box.query(OutboxItem_.isSynced.equals(0));
 
     // 2. Dynamically add the Primary Key condition if it exists
@@ -89,7 +90,8 @@ class SyncController {
         refreshTokenUrl,
         clientId,
         clientSecret,
-        dio,
+        certificatesDirectory,
+        pfxPassword,
       ),
     );
 
